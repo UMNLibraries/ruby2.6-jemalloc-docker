@@ -1,0 +1,38 @@
+---
+# Run repo hooks with command `pre-commit run --all-files`.
+# See also:
+#   * https://pre-commit.com/
+#   * https://pre-commit.com/hooks.html
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+
+  # check for secrets
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+
+  # YAML linter
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+        args: [--strict, -c=.yamllint.yml]
+
+  # Ansible linter
+  - repo: https://github.com/ansible/ansible-lint
+    rev: v26.4.0
+    hooks:
+      - id: ansible-lint
+        name: ansible-lint
+        description: Run ansible-lint on Ansible files
+        entry: ansible-lint
+        language: python
+        files: \.(yml|yaml)$
