@@ -12,9 +12,9 @@
 
 **Purpose**: Create shared verification and execution scaffolding for this refactor.
 
-- [ ] T001 Create runtime verification script scaffold in scripts/verify-ruby-jemalloc.sh
-- [ ] T002 Add make targets for build and verification flow in Makefile
-- [ ] T003 [P] Create feature quickstart verification doc in specs/001-use-heredocs/quickstart.md
+- [x] T001 Create runtime verification script scaffold in scripts/verify-ruby-jemalloc.sh
+- [x] T002 Add make targets for build and verification flow in Makefile
+- [x] T003 [P] Create feature quickstart verification doc in specs/001-use-heredocs/quickstart.md
 
 ---
 
@@ -24,10 +24,10 @@
 
 **⚠️ CRITICAL**: No user story work should begin until this phase is complete.
 
-- [ ] T004 Document here-doc style and shell safety conventions in specs/001-use-heredocs/research.md
-- [ ] T005 [P] Add CI matrix scaffold for linux/amd64 and linux/arm64 builds in .github/workflows/build.yml
-- [ ] T006 [P] Add deterministic build-input notes and validation steps in specs/001-use-heredocs/quickstart.md
-- [ ] T007 Add verification evidence template for consistency checks in specs/001-use-heredocs/verification/runtime-consistency.md
+- [x] T004 Document here-doc style and shell safety conventions in specs/001-use-heredocs/research.md
+- [x] T005 [P] Add CI matrix scaffold for linux/amd64 and linux/arm64 builds in .github/workflows/build.yml
+- [x] T006 [P] Add deterministic build-input notes and validation steps in specs/001-use-heredocs/quickstart.md
+- [x] T007 Add verification evidence template for consistency checks in specs/001-use-heredocs/verification/runtime-consistency.md
 
 **Checkpoint**: Foundation ready; story work can begin.
 
@@ -41,11 +41,11 @@
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Refactor OpenSSL build command sequence to here-doc format in Dockerfile
-- [ ] T009 [US1] Refactor jemalloc build command sequence to here-doc format in Dockerfile
-- [ ] T010 [US1] Refactor Ruby build command sequence to here-doc format in Dockerfile
-- [ ] T011 [US1] Refactor runtime ldconfig configuration step to readable multi-line form in Dockerfile
-- [ ] T012 [US1] Capture US1 build verification commands and results in specs/001-use-heredocs/verification/us1-build.md
+- [x] T008 [US1] Refactor OpenSSL build command sequence to here-doc format in Dockerfile
+- [x] T009 [US1] Refactor jemalloc build command sequence to here-doc format in Dockerfile
+- [x] T010 [US1] Refactor Ruby build command sequence to here-doc format in Dockerfile
+- [x] T011 [US1] Refactor runtime ldconfig configuration step to readable multi-line form in Dockerfile
+- [x] T012 [US1] Capture US1 build verification commands and results in specs/001-use-heredocs/verification/us1-build.md
 
 **Checkpoint**: User Story 1 is independently functional and demonstrable.
 
@@ -59,10 +59,10 @@
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] Implement Ruby/jemalloc runtime verification commands in scripts/verify-ruby-jemalloc.sh
-- [ ] T014 [US2] Document runtime verification procedure and expected outputs in README.md
-- [ ] T015 [US2] Execute and record before/after runtime consistency evidence in specs/001-use-heredocs/verification/runtime-consistency.md
-- [ ] T016 [US2] Add CI runtime verification execution step for both target architectures in .github/workflows/build.yml
+- [x] T013 [US2] Implement Ruby/jemalloc runtime verification commands in scripts/verify-ruby-jemalloc.sh
+- [x] T014 [US2] Document runtime verification procedure and expected outputs in README.md
+- [x] T015 [US2] Execute and record before/after runtime consistency evidence in specs/001-use-heredocs/verification/runtime-consistency.md
+- [x] T016 [US2] Add CI runtime verification execution step for both target architectures in .github/workflows/build.yml
 
 **Checkpoint**: User Story 2 is independently verifiable with documented runtime consistency evidence.
 
@@ -76,9 +76,9 @@
 
 ### Implementation for User Story 3
 
-- [ ] T017 [US3] Add explicit step labels/comments inside here-doc build blocks in Dockerfile
-- [ ] T018 [P] [US3] Add build-failure troubleshooting guide for here-doc blocks in README.md
-- [ ] T019 [P] [US3] Add CI/local triage command checklist in specs/001-use-heredocs/quickstart.md
+- [x] T017 [US3] Add explicit step labels/comments inside here-doc build blocks in Dockerfile
+- [x] T018 [P] [US3] Add build-failure troubleshooting guide for here-doc blocks in README.md
+- [x] T019 [P] [US3] Add CI/local triage command checklist in specs/001-use-heredocs/quickstart.md
 
 **Checkpoint**: User Story 3 provides standalone troubleshooting value.
 
@@ -88,9 +88,9 @@
 
 **Purpose**: Complete final validation and documentation alignment across stories.
 
-- [ ] T020 [P] Run repository checks and record outcomes in specs/001-use-heredocs/verification/polish-checks.md
-- [ ] T021 Verify documentation alignment with final Dockerfile behavior in README.md
-- [ ] T022 Verify all verification artifacts are present and linked in specs/001-use-heredocs/quickstart.md
+- [x] T020 [P] Run repository checks and record outcomes in specs/001-use-heredocs/verification/polish-checks.md
+- [x] T021 Verify documentation alignment with final Dockerfile behavior in README.md
+- [x] T022 Verify all verification artifacts are present and linked in specs/001-use-heredocs/quickstart.md
 
 ---
 

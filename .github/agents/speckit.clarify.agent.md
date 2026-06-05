@@ -1,6 +1,6 @@
 ---
 description: Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec.
-handoffs: 
+handoffs:
   - label: Build Technical Plan
     agent: speckit.plan
     prompt: Create a plan for the spec. I am building with Docker on github CICD, targeting a Ruby 2.6 container with jemalloc, providing intel and ARM architectures, with changes centered on Dockerfile RUN command structure and verification via docker build plus runtime checks.
