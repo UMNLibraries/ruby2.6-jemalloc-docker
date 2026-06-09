@@ -1,6 +1,8 @@
 .git
 .github/
 specs/
+Dockerfile*
+.dockerignore
 node_modules/
 dist/
 build/
