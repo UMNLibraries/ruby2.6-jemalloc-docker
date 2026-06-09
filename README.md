@@ -12,6 +12,12 @@ This repository provides a multistage Docker build that compiles:
 
 The multistage build keeps the final image lean by carrying over only the compiled binaries and runtime libraries from the builder stage.
 
+## Build Command Style
+
+Long Docker build sequences are expressed with shell here-doc `RUN` blocks so each logical step
+is easier to review and maintain. This keeps ordering explicit while avoiding fragile line
+continuation chains.
+
 ## Usage
 
 ### Pull from GitHub Container Registry
@@ -42,6 +48,30 @@ docker build \
 docker run --rm -it ghcr.io/umnlibraries/ruby2.6-jemalloc-docker:latest ruby -v
 ```
 
+### Runtime Verification
+
+Use the provided verification script after a local build:
+
+```sh
+make verify
+```
+
+Verify specific architectures (requires platform emulation support where needed):
+
+```sh
+make verify-amd64
+make verify-arm64
+```
+
+The verification script checks:
+
+- Ruby reports `2.6.x`
+- `libruby` links against `libjemalloc`
+- `ldconfig` exposes jemalloc in the runtime image
+
 ## CI/CD
 
 GitHub Actions builds the image on every push to `main` and publishes it to the [GitHub Container Registry](https://ghcr.io/umnlibraries/ruby2.6-jemalloc-docker). Pull requests trigger a build-only run (no push) to validate the `Dockerfile`.
+
+CI runs a build matrix for `linux/amd64` and `linux/arm64` and executes runtime verification for
+each platform.

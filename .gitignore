@@ -1,0 +1,22 @@
+# Ruby / build artifacts
+.bundle/
+log/
+tmp/
+*.gem
+vendor/bundle/
+
+# Container and local outputs
+coverage/
+dist/
+build/
+*.log
+.env
+.env.*
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
