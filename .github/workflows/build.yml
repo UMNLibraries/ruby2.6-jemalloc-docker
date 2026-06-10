@@ -20,6 +20,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      release_digest: ${{ steps.build.outputs.digest }}
 
     steps:
       - name: Checkout repository
@@ -105,7 +107,9 @@ jobs:
         run: echo "IMAGE_NAME_LOWER=${IMAGE_NAME,,}" >> "$GITHUB_ENV"
 
       - name: Resolve release image reference
-        run: echo "RELEASE_IMAGE=${REGISTRY}/${IMAGE_NAME_LOWER}:sha-${GITHUB_SHA}" >> "$GITHUB_ENV"
+        run: |
+          release_digest="${{ needs.release.outputs.release_digest }}"
+          echo "RELEASE_IMAGE=${REGISTRY}/${IMAGE_NAME_LOWER}@${release_digest}" >> "$GITHUB_ENV"
 
       - name: Pull release image
         run: docker pull "$RELEASE_IMAGE"
