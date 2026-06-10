@@ -132,10 +132,10 @@ EOF
 # ============================================================
 # Stage 2: Final – minimal runtime image
 # ============================================================
-FROM scratch
+FROM busybox:1-musl
 
-LABEL org.opencontainers.image.description="Ruby 2.6 image with jemalloc 5.3.1"
-LABEL org.opencontainers.image.source="https://github.com/UMNLibraries/ruby2.6-jemalloc-docker"
+LABEL org.opencontainers.image.description="Ruby 2.6 image with jemalloc 5.3.1" \
+      org.opencontainers.image.source="https://github.com/UMNLibraries/ruby2.6-jemalloc-docker"
 
 ARG RUBY_VERSION=2.6.10
 
