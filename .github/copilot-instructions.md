@@ -3,7 +3,7 @@ For additional context about technologies to be used, project structure,
 shell commands, and edge-case handling details, read specs/002-multiarch-image-cache/plan.md and treat it as the authoritative implementation context.
 <!-- SPECKIT END -->
 
-<!-- tram0004 instructions start -->
+<!-- project-specific instructions start -->
 
 # Instructions
 
@@ -39,4 +39,4 @@ The `Dockerfile` will be formatted with "here-doc" `RUN` blocks for clarity and 
 * Pull requests will be used for all changes, with code review and automated testing before merging.
 * Use `dependabot` to keep dependencies up to date.
 
-<!-- tram0004 instructions end -->
+<!-- project-specific instructions end -->
