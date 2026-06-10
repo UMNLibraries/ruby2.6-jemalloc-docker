@@ -10,16 +10,22 @@ image="$1"
 platform="${2:-}"
 
 run_args=(--rm)
+pull_args=()
 if [[ -n "$platform" ]]; then
   run_args+=(--platform "$platform")
+  pull_args+=(--platform "$platform")
 fi
 
 echo "[verify] image=${image} platform=${platform:-native}"
 
-ruby_version="$(docker run "${run_args[@]}" "$image" ruby -v)"
+# Pre-pull the exact platform variant so docker run does not try to re-resolve
+# digest references during execution.
+docker pull "${pull_args[@]}" "$image" >/dev/null
+
+ruby_version="$(docker run --pull=never "${run_args[@]}" "$image" ruby -v)"
 echo "$ruby_version" | grep -E "ruby 2\.6\."
 
-docker run "${run_args[@]}" "$image" ruby -e '
+docker run --pull=never "${run_args[@]}" "$image" ruby -e '
   maps = File.read("/proc/self/maps")
   unless maps.downcase.include?("jemalloc")
     warn "jemalloc not found in process memory map"
