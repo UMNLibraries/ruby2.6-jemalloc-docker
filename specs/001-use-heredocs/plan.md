@@ -1,12 +1,12 @@
 # Implementation Plan: Simplify Dockerfile RUN Commands with Here-Docs
 
-**Branch**: `[001-use-heredocs]` | **Date**: 2026-06-05 | **Spec**: [spec.md](./spec.md)
+**Branch**: `[001-use-heredocs]` | **Date**: 2026-06-09 | **Spec**: [spec.md](./spec.md)
 
 **Input**: Feature specification from `/specs/001-use-heredocs/spec.md`
 
 ## Summary
 
-Refactor long multi-step `RUN` command chains in the Dockerfile into shell here-doc blocks to improve readability and maintainability while preserving image behavior. Keep Ruby 2.6 + jemalloc compatibility unchanged, and add explicit build/runtime verification guidance for local and CI execution.
+Refactor long multi-step `RUN` command chains in the Dockerfile into shell here-doc blocks to improve readability and maintainability while preserving image behavior. Keep Ruby 2.6 + jemalloc compatibility unchanged, preserve deterministic build inputs, and document the verification contract shared by local contributors and CI.
 
 ## Technical Context
 
@@ -38,6 +38,25 @@ Refactor long multi-step `RUN` command chains in the Dockerfile into shell here-
 - Required validation: PASS - plan includes local + CI build checks for amd64/arm64 and runtime validation.
 - Documentation impact: PASS - README and workflow notes are updated with the new here-doc style and verification steps.
 
+## Phase 0 Research
+
+Research findings are captured in [research.md](./research.md).
+
+- Here-doc `RUN` blocks are the preferred representation for multi-step source-build flows because
+  they preserve order, improve editability, and make failures easier to localize.
+- Determinism depends on preserving pinned versions, canonical source URLs, cleanup behavior, and
+  the OpenSSL -> jemalloc -> Ruby build order.
+- Runtime verification must keep the existing three-part contract: Ruby version, jemalloc linkage,
+  and linker-cache visibility.
+
+No `NEEDS CLARIFICATION` items remain after research.
+
+## Phase 1 Design
+
+- Data model: [data-model.md](./data-model.md)
+- Interface contract: [contracts/build-verification-contract.md](./contracts/build-verification-contract.md)
+- Quickstart: [quickstart.md](./quickstart.md)
+
 ## Project Structure
 
 ### Documentation (this feature)
@@ -45,7 +64,13 @@ Refactor long multi-step `RUN` command chains in the Dockerfile into shell here-
 ```text
 specs/001-use-heredocs/
 ├── plan.md
+├── research.md
+├── data-model.md
+├── quickstart.md
+├── contracts/
+│   └── build-verification-contract.md
 ├── spec.md
+├── verification/
 └── tasks.md
 ```
 
@@ -55,9 +80,24 @@ specs/001-use-heredocs/
 Dockerfile
 README.md
 .github/workflows/build.yml
+Makefile
+scripts/verify-ruby-jemalloc.sh
 ```
 
-**Structure Decision**: Single repository with Docker artifact focus. Implementation is concentrated in `Dockerfile`; verification and contributor guidance are captured in `README.md` and CI workflow checks in `.github/workflows/build.yml`.
+**Structure Decision**: Single repository with Docker artifact focus. Implementation is concentrated in `Dockerfile`; verification behavior is exposed through `Makefile`, `scripts/verify-ruby-jemalloc.sh`, and `.github/workflows/build.yml`; contributor guidance and evidence are captured in `README.md` and the feature spec directory.
+
+## Post-Design Constitution Check
+
+- Ruby runtime alignment: PASS - design artifacts keep Ruby 2.6.10 as the runtime target and do
+  not introduce migration work.
+- jemalloc verification: PASS - the contract and data model require scriptable runtime checks for
+  linkage and linker-cache visibility.
+- Build determinism: PASS - research and quickstart preserve pinned versions, source locations,
+  cleanup rules, and stage ordering.
+- Required validation: PASS - quickstart and contract docs define local and CI verification paths
+  for amd64 and arm64.
+- Documentation impact: PASS - the feature documents contract changes in the plan artifacts and
+  keeps README alignment explicit.
 
 ## Complexity Tracking
 

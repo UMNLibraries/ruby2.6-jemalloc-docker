@@ -10,12 +10,22 @@ make build-amd64
 make verify-arm64
 ```
 
+## Run Date
+
+- 2026-06-09
+
 ## Results
 
-- lint: FAIL (repository-wide pre-existing YAML/secret-scan findings in `.specify/*`; unrelated to this feature's core behavior)
+- lint: FAIL (pre-existing repository-wide findings in `.specify/*` extension metadata and secret-scan entropy checks)
 - verify: PASS
 - amd64 verify: PASS
 - arm64 verify: PASS
+
+## Lint Failure Notes
+
+- `detect-secrets` flagged high-entropy strings in `.specify/integrations/*.manifest.json` (pre-existing generated integration metadata).
+- `yamllint` and `ansible-lint` reported formatting/indentation issues in `.specify/*` workflow/extension YAML files that were not modified by this feature's runtime behavior updates.
+- `end-of-file-fixer` adjusted `.gitignore` trailing newline.
 
 ## Documentation Alignment
 
