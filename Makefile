@@ -6,11 +6,15 @@ MULTIARCH_TAG ?= sha-$(shell git rev-parse --short HEAD 2>/dev/null || echo loca
 MULTIARCH_PLATFORMS ?= linux/amd64,linux/arm64
 MULTIARCH_CACHE_DIR ?= .buildx-cache
 
+clean:
+	-rm -rf .buildx-cache .buildx-cache-new
+	-docker rmi --force ruby2.6-jemalloc:local
+
 lint:
 	pre-commit run --all-file
 
 build:
-	docker build -t ruby2.6-jemalloc:local .
+	docker build --no-cache --progress=plain --tag ruby2.6-jemalloc:local .
 
 build-amd64:
 	docker buildx build --platform linux/amd64 --load -t ruby2.6-jemalloc:amd64 .
