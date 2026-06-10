@@ -1,27 +1,23 @@
 <!--
 Sync Impact Report
-- Version change: template -> 1.0.0
+- Version change: 1.0.0 -> 1.1.0
 - Modified principles:
-	- PRINCIPLE_1_NAME -> I. Reproducible Ruby 2.6 Runtime
-	- PRINCIPLE_2_NAME -> II. Verified jemalloc Integration
-	- PRINCIPLE_3_NAME -> III. Deterministic Container Build Inputs
-	- PRINCIPLE_4_NAME -> IV. Mandatory Build and Runtime Verification
-	- PRINCIPLE_5_NAME -> V. Documentation and Change Traceability
+	- None
 - Added sections:
-	- Container and Security Constraints
-	- Delivery Workflow and Quality Gates
+	- None
 - Removed sections:
 	- None
 - Templates requiring updates:
-	- ✅ updated: .specify/templates/plan-template.md
-	- ✅ updated: .specify/templates/spec-template.md
-	- ✅ updated: .specify/templates/tasks-template.md
+	- ✅ reviewed (no change required): .specify/templates/plan-template.md
+	- ✅ reviewed (no change required): .specify/templates/spec-template.md
+	- ✅ reviewed (no change required): .specify/templates/tasks-template.md
 	- ✅ reviewed (no change required): .specify/extensions/git/commands/speckit.git.initialize.md
 	- ✅ reviewed (no change required): .specify/extensions/git/commands/speckit.git.commit.md
 	- ✅ reviewed (no change required): .specify/extensions/git/commands/speckit.git.feature.md
 	- ✅ reviewed (no change required): .specify/extensions/git/commands/speckit.git.remote.md
 	- ✅ reviewed (no change required): .specify/extensions/git/commands/speckit.git.validate.md
 	- ✅ reviewed (no change required): .specify/extensions/agent-context/commands/speckit.agent-context.update.md
+	- ✅ reviewed (no change required): README.md
 - Follow-up TODOs:
 	- None
 -->
@@ -96,5 +92,7 @@ Compliance review expectations:
 - Every PR review MUST include a constitution compliance check.
 - Plan, spec, and task artifacts under `.specify/templates/` MUST remain aligned with these
 	principles.
+- Extension command docs under `.specify/extensions/**/commands/` and operational guidance
+	such as `README.md` MUST remain aligned with these principles.
 
-**Version**: 1.0.0 | **Ratified**: 2026-06-04 | **Last Amended**: 2026-06-04
+**Version**: 1.1.0 | **Ratified**: 2026-06-04 | **Last Amended**: 2026-06-09
