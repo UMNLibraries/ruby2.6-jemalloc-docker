@@ -1,7 +1,7 @@
 ---
 name: Build and publish Docker image
 
-on:
+"on":
   push:
     branches: [main]
   pull_request:
@@ -149,4 +149,6 @@ jobs:
 
       - name: Verify Ruby and jemalloc runtime
         run: |
-          ./scripts/verify-ruby-jemalloc.sh "ruby2.6-jemalloc:ci-${{ matrix.arch }}" "${{ matrix.platform }}"
+          ./scripts/verify-ruby-jemalloc.sh \
+            "ruby2.6-jemalloc:ci-${{ matrix.arch }}" \
+            "${{ matrix.platform }}"

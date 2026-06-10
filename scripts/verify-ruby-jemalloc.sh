@@ -16,13 +16,16 @@ fi
 
 echo "[verify] image=${image} platform=${platform:-native}"
 
-docker run "${run_args[@]}" "$image" sh -euxc '
-  ruby -v | grep -E "ruby 2\.6\."
+ruby_version="$(docker run "${run_args[@]}" "$image" ruby -v)"
+echo "$ruby_version" | grep -E "ruby 2\.6\."
 
-  libruby=$(ruby -rrbconfig -e "print File.join(RbConfig::CONFIG[\"libdir\"], RbConfig::CONFIG[\"LIBRUBY_SO\"])")
-  ldd "$libruby" | grep -qi jemalloc
-
-  ldconfig -p | grep -qi jemalloc
+docker run "${run_args[@]}" "$image" ruby -e '
+  maps = File.read("/proc/self/maps")
+  unless maps.downcase.include?("jemalloc")
+    warn "jemalloc not found in process memory map"
+    exit 1
+  end
+  puts "jemalloc runtime mapping detected"
 '
 
 echo "[verify] ruby and jemalloc checks passed"

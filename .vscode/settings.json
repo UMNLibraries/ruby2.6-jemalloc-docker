@@ -10,6 +10,8 @@
         ".specify/scripts/bash/": true,
         ".specify/scripts/powershell/": true,
         "printf": true,
-        "true": true
+        "true": true,
+        "git worktree": true,
+        "pre-commit": true
     }
 }

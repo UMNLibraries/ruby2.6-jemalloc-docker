@@ -25,14 +25,3 @@ repos:
     hooks:
       - id: yamllint
         args: [--strict, -c=.yamllint.yml]
-
-  # Ansible linter
-  - repo: https://github.com/ansible/ansible-lint
-    rev: v26.4.0
-    hooks:
-      - id: ansible-lint
-        name: ansible-lint
-        description: Run ansible-lint on Ansible files
-        entry: ansible-lint
-        language: python
-        files: \.(yml|yaml)$

@@ -1,4 +1,4 @@
-# Data Model: Single Multi-Platform Image Build with Efficient Caching
+# Data Model: Minimal Scratch Runtime and Multi-Platform Build Verification
 
 ## Entity: Multi-Platform Image Tag
 
@@ -15,6 +15,24 @@
 
 - A multi-platform image tag MUST include both linux/amd64 and linux/arm64 variants.
 - A tag MUST not be considered release-ready unless every required platform variant is present.
+
+## Entity: Runtime Artifact Set
+
+**Purpose**: Defines the runtime files copied into the final scratch image.
+
+### Runtime Artifact Set Fields
+
+- `ruby_binaries`: Paths under `/usr/local` required for Ruby execution
+- `openssl_runtime`: Paths under `/opt/openssl` required for TLS/runtime linkage
+- `ca_certificates`: Certificate bundle paths for outbound TLS
+- `shared_libraries`: Resolved dynamic libraries and soname symlinks required by Ruby, jemalloc, and OpenSSL
+- `assembly_status`: Success/failure of runtime filesystem assembly
+
+### Runtime Artifact Set Validation Rules
+
+- The final image MUST contain all runtime artifacts required to execute `ruby -v`.
+- Shared-library copy logic MUST include both resolved targets and expected soname paths.
+- The final image MUST exclude build toolchains and package-manager caches.
 
 ## Entity: Platform Build Result
 
@@ -50,3 +68,20 @@
 - Cache reuse MUST be measurable for repeated builds.
 - Unchanged build steps SHOULD be restored from cache rather than rebuilt.
 - A cache record MUST be associated with the build run that produced it.
+
+## Entity: Runtime Verification Result
+
+**Purpose**: Captures runtime acceptance checks executed against built images.
+
+### Runtime Verification Result Fields
+
+- `image_reference`: Tested image tag or digest
+- `platform`: Tested platform (`linux/amd64` or `linux/arm64`)
+- `ruby_version_check`: Pass/fail result for Ruby 2.6.x check
+- `jemalloc_runtime_check`: Pass/fail result for jemalloc mapping detection in process memory
+- `verified_at`: Timestamp or workflow run identifier
+
+### Runtime Verification Result Validation Rules
+
+- Both Ruby version and jemalloc checks MUST pass for each required platform.
+- A release is eligible only when verification succeeds for both amd64 and arm64.

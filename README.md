@@ -10,7 +10,7 @@ This repository provides a multistage Docker build that compiles:
 - **jemalloc 5.3.0** – linked into Ruby at compile time via `--with-jemalloc` for improved memory performance.
 - **Ruby 2.6.10** – the latest 2.6.x release, compiled from source against the above libraries.
 
-The multistage build keeps the final image lean by carrying over only the compiled binaries and runtime libraries from the builder stage.
+The multistage build keeps the final image lean by carrying over only the compiled binaries and required runtime libraries into a `scratch`-based final image.
 
 ## Build Command Style
 
@@ -89,8 +89,7 @@ make verify-release
 The verification script checks:
 
 - Ruby reports `2.6.x`
-- `libruby` links against `libjemalloc`
-- `ldconfig` exposes jemalloc in the runtime image
+- jemalloc is mapped into the running Ruby process (`/proc/self/maps`)
 
 ## CI/CD
 

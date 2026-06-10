@@ -1,4 +1,4 @@
-# Quickstart: Multi-Platform Release Build with Efficient Caching
+# Quickstart: Minimal Scratch Runtime Build and Multi-Arch Verification
 
 ## Prerequisites
 
@@ -9,7 +9,13 @@
 ## Build and Verify Locally
 
 ```sh
-make build
+docker build -t ruby2.6-jemalloc:local .
+./scripts/verify-ruby-jemalloc.sh ruby2.6-jemalloc:local
+```
+
+Equivalent make target:
+
+```sh
 make verify
 ```
 
@@ -29,9 +35,18 @@ make build-arm64
 make verify-arm64
 ```
 
+## GitHub Actions Verification Path
+
+Release workflow expectations:
+
+- Build and push one multi-platform tag (`linux/amd64`, `linux/arm64`) via Buildx.
+- Import/export Buildx cache via GitHub Actions backend with `mode=max`.
+- Run runtime verification job for each platform variant.
+
 ## Expected Outcomes
 
 - One published tag resolves to both amd64 and arm64 variants.
+- Final runtime image remains minimal (`scratch`) while still executing Ruby successfully.
 - Warm builds reuse cached work when inputs are unchanged.
 - Runtime verification passes for both platforms.
 

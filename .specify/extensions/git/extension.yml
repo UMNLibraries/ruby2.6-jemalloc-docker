@@ -1,10 +1,13 @@
+---
 schema_version: "1.0"
 
 extension:
   id: git
   name: "Git Branching Workflow"
   version: "1.0.0"
-  description: "Feature branch creation, numbering (sequential/timestamp), validation, and Git remote detection"
+  description: >-
+    Feature branch creation, numbering (sequential/timestamp), validation,
+    and Git remote detection
   author: spec-kit-core
   repository: https://github.com/github/spec-kit
   license: MIT
