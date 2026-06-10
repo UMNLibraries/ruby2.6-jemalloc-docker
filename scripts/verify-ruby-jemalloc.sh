@@ -10,17 +10,28 @@ image="$1"
 platform="${2:-}"
 
 run_args=(--rm)
-pull_args=()
-if [[ -n "$platform" ]]; then
-  run_args+=(--platform "$platform")
-  pull_args+=(--platform "$platform")
-fi
 
 echo "[verify] image=${image} platform=${platform:-native}"
 
-# Pre-pull the exact platform variant so docker run does not try to re-resolve
-# digest references during execution.
-docker pull "${pull_args[@]}" "$image" >/dev/null
+# When a platform is requested, resolve the platform-specific child digest from
+# the manifest list so docker pull/run do not receive a manifest-list digest
+# combined with --platform (which causes "cannot overwrite digest" errors).
+if [[ -n "$platform" ]]; then
+  child_digest="$(
+    docker buildx imagetools inspect --format \
+      '{{range .Manifest.Manifests}}{{if eq (printf "%s/%s" .Platform.OS .Platform.Architecture) "'"${platform}"'"}}{{.Digest}}{{end}}{{end}}' \
+      "${image}"
+  )"
+  # Strip the repo/tag portion, keep only registry/repo prefix.
+  image_ref="${image%%@*}"
+  image="${image_ref}@${child_digest}"
+  echo "[verify] resolved platform digest: ${image}"
+fi
+
+run_args+=(--platform "${platform:-linux/$(uname -m | sed s/x86_64/amd64/)}")
+
+# Pre-pull the exact single-arch digest before running.
+docker pull "${image}" >/dev/null
 
 ruby_version="$(docker run --pull=never "${run_args[@]}" "$image" ruby -v)"
 echo "$ruby_version" | grep -E "ruby 2\.6\."
