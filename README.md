@@ -18,6 +18,22 @@ Long Docker build sequences are expressed with shell here-doc `RUN` blocks so ea
 is easier to review and maintain. This keeps ordering explicit while avoiding fragile line
 continuation chains.
 
+## Multi-Platform Release and Caching
+
+The release workflow publishes one image tag that resolves to both `linux/amd64` and
+`linux/arm64` variants. GitHub Actions uses Buildx cache import/export so unchanged work can be
+reused across repeated builds.
+
+Local contributors can mirror the release workflow with:
+
+```sh
+make build-release
+make verify-release
+```
+
+`make build-release` publishes the multi-platform image tag and preserves cache in `.buildx-cache`
+between runs. `make verify-release` pulls the published tag and verifies both architectures.
+
 ## Usage
 
 ### Pull from GitHub Container Registry
@@ -63,6 +79,13 @@ make verify-amd64
 make verify-arm64
 ```
 
+For the multi-platform release flow, use:
+
+```sh
+make build-release
+make verify-release
+```
+
 The verification script checks:
 
 - Ruby reports `2.6.x`
@@ -71,7 +94,10 @@ The verification script checks:
 
 ## CI/CD
 
-GitHub Actions builds the image on every push to `main` and publishes it to the [GitHub Container Registry](https://ghcr.io/umnlibraries/ruby2.6-jemalloc-docker). Pull requests trigger a build-only run (no push) to validate the `Dockerfile`.
+GitHub Actions publishes one multi-platform image tag on pushes to `main` and manual release
+runs. Pull requests run per-platform verification builds with cache reuse enabled so changes are
+validated without publishing.
 
-CI runs a build matrix for `linux/amd64` and `linux/arm64` and executes runtime verification for
-each platform.
+The release job publishes a single manifest-backed tag for `linux/amd64` and `linux/arm64`, while
+the verification job checks the published tag on `main` and uses cached per-platform build/load
+runs on pull requests.

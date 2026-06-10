@@ -12,10 +12,10 @@
 
 **Purpose**: Prepare shared workflow, build, and contributor scaffolding for the multi-platform release flow.
 
-- [ ] T001 Update release workflow structure for multi-platform publication in .github/workflows/build.yml
-- [ ] T002 [P] Add cache-enabled Buildx build settings for release jobs in .github/workflows/build.yml
-- [ ] T003 [P] Add local multi-platform build and verify targets in Makefile
-- [ ] T004 [P] Record contributor-facing single-tag release guidance in README.md
+- [X] T001 Update release workflow structure for multi-platform publication in .github/workflows/build.yml
+- [X] T002 [P] Add cache-enabled Buildx build settings for release jobs in .github/workflows/build.yml
+- [X] T003 [P] Add local multi-platform build and verify targets in Makefile
+- [X] T004 [P] Record contributor-facing single-tag release guidance in README.md
 
 ---
 
@@ -25,12 +25,12 @@
 
 **⚠️ CRITICAL**: No user story work should begin until this phase is complete.
 
-- [ ] T005 Capture multi-platform manifest and cache reuse decisions in specs/002-multiarch-image-cache/research.md
-- [ ] T006 [P] Finalize build result and cache record entities in specs/002-multiarch-image-cache/data-model.md
-- [ ] T007 [P] Finalize single-tag release and cache reuse contract in specs/002-multiarch-image-cache/contracts/build-release-contract.md
-- [ ] T008 Document cold-build and warm-build validation flow in specs/002-multiarch-image-cache/quickstart.md
-- [ ] T009 Create release-manifest evidence template in specs/002-multiarch-image-cache/verification/release-manifest.md
-- [ ] T010 Create cache-reuse evidence template in specs/002-multiarch-image-cache/verification/cache-reuse.md
+- [X] T005 Capture multi-platform manifest and cache reuse decisions in specs/002-multiarch-image-cache/research.md
+- [X] T006 [P] Finalize build result and cache record entities in specs/002-multiarch-image-cache/data-model.md
+- [X] T007 [P] Finalize single-tag release and cache reuse contract in specs/002-multiarch-image-cache/contracts/build-release-contract.md
+- [X] T008 Document cold-build and warm-build validation flow in specs/002-multiarch-image-cache/quickstart.md
+- [X] T009 Create release-manifest evidence template in specs/002-multiarch-image-cache/verification/release-manifest.md
+- [X] T010 Create cache-reuse evidence template in specs/002-multiarch-image-cache/verification/cache-reuse.md
 
 **Checkpoint**: Foundation ready; story work can begin.
 
@@ -44,9 +44,9 @@
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Publish one manifest-backed image tag for both amd64 and arm64 in .github/workflows/build.yml
-- [ ] T012 [US1] Validate release publication includes both platform variants in .github/workflows/build.yml
-- [ ] T013 [US1] Record single-tag publication evidence in specs/002-multiarch-image-cache/verification/release-manifest.md
+- [X] T011 [US1] Publish one manifest-backed image tag for both amd64 and arm64 in .github/workflows/build.yml
+- [X] T012 [US1] Validate release publication includes both platform variants in .github/workflows/build.yml
+- [X] T013 [US1] Record single-tag publication evidence in specs/002-multiarch-image-cache/verification/release-manifest.md
 
 **Checkpoint**: User Story 1 can be demonstrated and validated independently.
 
@@ -60,9 +60,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T014 [US2] Enable remote cache import/export for repeated builds in .github/workflows/build.yml
-- [ ] T015 [US2] Add cache-aware local build guidance and targets in Makefile
-- [ ] T016 [US2] Record warm-build and cache-hit evidence in specs/002-multiarch-image-cache/verification/cache-reuse.md
+- [X] T014 [US2] Enable remote cache import/export for repeated builds in .github/workflows/build.yml
+- [X] T015 [US2] Add cache-aware local build guidance and targets in Makefile
+- [X] T016 [US2] Record warm-build and cache-hit evidence in specs/002-multiarch-image-cache/verification/cache-reuse.md
 
 **Checkpoint**: User Story 2 is independently verifiable with cache evidence.
 
@@ -76,10 +76,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T017 [US3] Keep runtime verification checks aligned with both target platforms in scripts/verify-ruby-jemalloc.sh
-- [ ] T018 [US3] Wire runtime verification into the release workflow for both platforms in .github/workflows/build.yml
-- [ ] T019 [P] [US3] Document runtime verification and release-gating behavior in README.md
-- [ ] T020 [US3] Record runtime verification evidence for both platform variants in specs/002-multiarch-image-cache/verification/runtime-consistency.md
+- [X] T017 [US3] Keep runtime verification checks aligned with both target platforms in scripts/verify-ruby-jemalloc.sh
+- [X] T018 [US3] Wire runtime verification into the release workflow for both platforms in .github/workflows/build.yml
+- [X] T019 [P] [US3] Document runtime verification and release-gating behavior in README.md
+- [X] T020 [US3] Record runtime verification evidence for both platform variants in specs/002-multiarch-image-cache/verification/runtime-consistency.md
 
 **Checkpoint**: User Story 3 provides standalone runtime confidence for the release flow.
 
@@ -89,9 +89,9 @@
 
 **Purpose**: Final alignment across docs, workflow, and evidence artifacts.
 
-- [ ] T021 [P] Validate quickstart examples against final workflow commands in specs/002-multiarch-image-cache/quickstart.md
-- [ ] T022 Verify README release and cache guidance matches workflow behavior in README.md
-- [ ] T023 Verify all verification artifacts are linked from specs/002-multiarch-image-cache/quickstart.md
+- [X] T021 [P] Validate quickstart examples against final workflow commands in specs/002-multiarch-image-cache/quickstart.md
+- [X] T022 Verify README release and cache guidance matches workflow behavior in README.md
+- [X] T023 Verify all verification artifacts are linked from specs/002-multiarch-image-cache/quickstart.md
 
 ---
 

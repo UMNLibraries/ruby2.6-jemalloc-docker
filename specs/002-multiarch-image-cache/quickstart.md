@@ -13,6 +13,13 @@ make build
 make verify
 ```
 
+## Multi-Platform Release Workflow
+
+```sh
+make build-release
+make verify-release
+```
+
 ## Multi-Platform Verification
 
 ```sh
@@ -28,8 +35,16 @@ make verify-arm64
 - Warm builds reuse cached work when inputs are unchanged.
 - Runtime verification passes for both platforms.
 
+## Cache Notes
+
+- Local release builds store cache in `.buildx-cache`.
+- CI release builds export cache to GitHub Actions cache for reuse across runs.
+- Pull request verification builds import the shared cache and rebuild only platform-specific work.
+
 ## Evidence To Capture
 
-- Build logs showing cache reuse on repeated runs
-- Release workflow logs showing one tag published for both variants
-- Runtime verification output for amd64 and arm64
+Record results in the following verification artifacts:
+
+- [verification/release-manifest.md](./verification/release-manifest.md) — single-tag publication evidence for both platform variants
+- [verification/cache-reuse.md](./verification/cache-reuse.md) — cold-build and warm-build cache reuse evidence
+- [verification/runtime-consistency.md](./verification/runtime-consistency.md) — runtime verification results for amd64 and arm64
