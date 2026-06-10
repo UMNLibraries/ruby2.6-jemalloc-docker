@@ -12,6 +12,7 @@
         "printf": true,
         "true": true,
         "git worktree": true,
-        "pre-commit": true
+        "pre-commit": true,
+        "docker build": true
     }
 }

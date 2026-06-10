@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1
 
 # ============================================================
-# Stage 1: Builder – compile OpenSSL 1.1.1, jemalloc, Ruby
+# Stage 1: compile OpenSSL 1.1.1, jemalloc, Ruby
 # ============================================================
-FROM debian:latest AS builder
+FROM debian:bookworm-slim AS builder
 
 ARG OPENSSL_VERSION=1.1.1w
 ARG JEMALLOC_VERSION=5.3.1
@@ -133,6 +133,9 @@ EOF
 # Stage 2: Final – minimal runtime image
 # ============================================================
 FROM scratch
+
+LABEL org.opencontainers.image.description="Ruby 2.6 image with jemalloc 5.3.1"
+LABEL org.opencontainers.image.source="https://github.com/UMNLibraries/ruby2.6-jemalloc-docker"
 
 ARG RUBY_VERSION=2.6.10
 
