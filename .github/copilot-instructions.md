@@ -61,6 +61,8 @@ The `Dockerfile` will be formatted with "here-doc" `RUN` blocks for clarity and 
   corresponding Docker image to the registry.
 * The release process will include validation steps to ensure the image is built correctly and functions
   as expected before it is published.
+* The project should contain a changelog file that is updated with each release, detailing the changes
+  made in that release.
 
 ## Validation
 
