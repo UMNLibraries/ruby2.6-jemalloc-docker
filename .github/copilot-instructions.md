@@ -1,6 +1,6 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and edge-case handling details, read specs/002-multiarch-image-cache/plan.md
+shell commands, and edge-case handling details, read specs/003-support-adduser-utils/plan.md
 and treat it as the authoritative implementation context.
 <!-- SPECKIT END -->
 
@@ -11,6 +11,14 @@ and treat it as the authoritative implementation context.
 The purpose of this project is to build a Docker container image providing the latest patch release
 within the Ruby 2.6.x series (intentionally pinned to 2.6, not a newer major version). The 2.6.x pin
 is a hard requirement.
+
+The image must include the `jemalloc` implementation of `malloc` for improved memory performance.
+To support development and testing, the resulting container will be multi-architecture, supporting both
+`linux/amd64` and `linux/arm64` architectures.
+
+This container image is intended to be used in turn as a base image for rails and other applications,
+so the image must support the ability to install additional packages whose identities are not yet known
+at this time.
 
 The image must include the `jemalloc` implementation of `malloc` for improved memory performance.
 To support development and testing, the resulting container will be multi-architecture, supporting both
@@ -47,11 +55,18 @@ The `Dockerfile` will be formatted with "here-doc" `RUN` blocks for clarity and 
 * Pull requests will be used for all changes, with code review and automated testing before merging.
 * Use `dependabot` to keep dependencies up to date.
 
+## Release Management
+
+* When a new tag is pushed to the repository, the CI workflow will automatically build and push the
+  corresponding Docker image to the registry.
+* The release process will include validation steps to ensure the image is built correctly and functions
+  as expected before it is published.
+
 ## Validation
 
 * The project will use the `pre-commit` toolchain for local development to ensure code quality
   and consistency.
-* A `make lint` target will be used to lint all markdown files in the repository, ensuring
-  documentation quality.
+* A `make lint` target will be used to lint all markdown, JSON, and YAML files in the repository,
+  ensuring source code quality.
 
 <!-- project-specific instructions end -->

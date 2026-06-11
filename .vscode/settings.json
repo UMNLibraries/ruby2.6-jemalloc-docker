@@ -13,6 +13,10 @@
         "true": true,
         "git worktree": true,
         "pre-commit": true,
-        "docker build": true
+        "docker build": true,
+        ".specify/extensions/git/scripts/bash/create-new-feature.sh": true,
+        "adduser": true,
+        "cp": true,
+        "get_terminal_output": true
     }
 }
