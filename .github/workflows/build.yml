@@ -43,13 +43,14 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Normalize image name
-        run: echo "IMAGE_NAME_LOWER=${IMAGE_NAME,,}" >> "$GITHUB_ENV"
+        id: normalize
+        run: echo "image_name_lower=${IMAGE_NAME,,}" >> "$GITHUB_OUTPUT"
 
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}
+          images: ${{ env.REGISTRY }}/${{ steps.normalize.outputs.image_name_lower }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha,prefix=sha-
@@ -106,12 +107,14 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Normalize image name
-        run: echo "IMAGE_NAME_LOWER=${IMAGE_NAME,,}" >> "$GITHUB_ENV"
+        id: normalize
+        run: echo "image_name_lower=${IMAGE_NAME,,}" >> "$GITHUB_OUTPUT"
 
       - name: Resolve release image reference
         run: |
           release_digest="${{ needs.release.outputs.release_digest }}"
-          echo "RELEASE_IMAGE=${REGISTRY}/${IMAGE_NAME_LOWER}@${release_digest}" >> "$GITHUB_ENV"
+          image_ref="${REGISTRY}/${{ steps.normalize.outputs.image_name_lower }}"
+          echo "RELEASE_IMAGE=${image_ref}@${release_digest}" >> "$GITHUB_ENV"
 
       - name: Pull release image
         run: docker pull "$RELEASE_IMAGE"

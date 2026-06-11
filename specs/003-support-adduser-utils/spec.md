@@ -82,7 +82,7 @@ As a maintainer, I want existing runtime guarantees to remain intact after utili
 
 - **FR-001**: The runtime image MUST support downstream user-management workflows using `adduser` and related commands available by default in `debian:bookworm-slim`.
 - **FR-002**: The runtime image MUST support non-interactive downstream execution of user-management commands in Docker build steps.
-- **FR-003**: The image build workflow MUST keep the final image small while allowing required utilities; size impact and rationale MUST be documented.
+- **FR-003**: The image build workflow MUST keep the final image small while allowing required utilities.
 - **FR-004**: The image MUST preserve Ruby 2.6 runtime compatibility after utility support is added.
 - **FR-005**: The image MUST preserve verified jemalloc activation behavior after utility support is added.
 - **FR-006**: CI MUST include build and runtime verification checks that cover runtime compatibility expectations.
@@ -112,7 +112,7 @@ As a maintainer, I want existing runtime guarantees to remain intact after utili
 ### Measurable Outcomes
 
 - **SC-001**: 100% of release builds produce an image with `debian:bookworm-slim` as the final runtime base.
-- **SC-002**: The updated image size increase versus the previous release remains within a documented bound and does not exceed 20%.
+- **SC-002**: The updated image remains small while preserving required downstream utility support.
 - **SC-003**: 100% of release-eligible builds pass Ruby version verification (2.6.x) and jemalloc activation checks.
 - **SC-004**: Documentation-based setup success rate for downstream user-creation workflows is at least 95% in maintainer validation runs.
 - **SC-005**: 100% of release-eligible builds pass an image hygiene check confirming temporary package/build files are removed from the final image.

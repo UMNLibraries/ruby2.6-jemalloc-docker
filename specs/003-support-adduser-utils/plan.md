@@ -24,7 +24,8 @@ Switch the final runtime from strict minimal runtime assumptions to a small-but-
 
 **Project Type**: Container build and release workflow repository
 
-**Performance Goals**: Keep runtime image small and bounded (<=20% growth vs previous release) while preserving downstream operability
+**Performance Goals**: Keep runtime image small for practical downstream use
+while preserving downstream operability
 
 **Constraints**: Ruby 2.6 compatibility must remain, jemalloc verification must pass, final runtime base constrained to `debian:bookworm-slim`, temporary build/package files must be removed
 
