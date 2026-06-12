@@ -1,12 +1,20 @@
+<!-- copilot instructions start -->
+Use professional, neutral language.
+No jokes, sarcasm, playful metaphors, or “cute” commentary.
+Keep responses direct and task-focused.
+<!-- copilot instructions end -->
+
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and edge-case handling details, read specs/002-multiarch-image-cache/plan.md
+shell commands, and edge-case handling details, read specs/003-support-adduser-utils/plan.md
 and treat it as the authoritative implementation context.
 <!-- SPECKIT END -->
 
 <!-- project-specific instructions start -->
 
 # Instructions
+
+For governance principles, constraints, and PR requirements, see `.specify/memory/constitution.md`.
 
 The purpose of this project is to build a Docker container image providing the latest patch release
 within the Ruby 2.6.x series (intentionally pinned to 2.6, not a newer major version). The 2.6.x pin
@@ -21,9 +29,10 @@ The project will use `dependabot` to keep the pinned versions of Ruby, OpenSSL, 
 
 ## Docker Specification
 
-The resulting Docker image will be based on the "scratch" image, and have a minimal runtime footprint.
-It will use a multi-stage build to limit image contents to only the compiled Ruby binaries, necessary
-runtime libraries, and files needed for testing and validating the image.
+The resulting Docker image will be based on `debian:bookworm-slim`, providing a practical runtime
+footprint that supports downstream user-management workflows. It will use a multi-stage build to
+limit image contents to compiled Ruby binaries, required runtime libraries, and files needed for
+testing and validating the image.
 
 The `Dockerfile` will be formatted with "here-doc" `RUN` blocks for clarity and maintainability.
 
@@ -44,7 +53,6 @@ The `Dockerfile` will be formatted with "here-doc" `RUN` blocks for clarity and 
 
 * The project will be hosted on GitHub, with a clear branching strategy for development and releases.
 * Use semantic versioning for release tags, and maintain a changelog to document changes.
-* Pull requests will be used for all changes, with code review and automated testing before merging.
 * Use `dependabot` to keep dependencies up to date.
 
 ## Validation
