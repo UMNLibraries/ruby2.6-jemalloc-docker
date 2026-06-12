@@ -103,3 +103,57 @@ Per feature scope, verification does not require dedicated command-presence chec
 - Downstream workflow expectations: Documented with working examples
 - Ruby and jemalloc preservation: Verified
 - No breaking changes to existing verification: Confirmed
+
+---
+
+## FR-002 Verification: Non-Interactive User Management
+
+### Derived Image Build Walkthrough (Non-Interactive)
+
+Command used:
+
+```bash
+docker build -t ruby2.6-jemalloc:noninteractive-check -f- . <<'EOF'
+FROM ruby2.6-jemalloc:local
+RUN adduser --system --disabled-password --disabled-login --gecos '' ciuser
+RUN id ciuser
+EOF
+```
+
+Result:
+
+- Build completed successfully with no interactive prompts.
+- User creation step succeeded using non-interactive `adduser` flags.
+
+Runtime confirmation:
+
+```bash
+docker run --rm ruby2.6-jemalloc:noninteractive-check id ciuser
+```
+
+Observed output:
+
+```text
+uid=100(ciuser) gid=65534(nogroup) groups=65534(nogroup)
+```
+
+FR-002 status: ✅ PASS
+
+---
+
+## SC-004 Validation Protocol and Result
+
+### Maintainer Validation Protocol
+
+1. Build the base image: `docker build -t ruby2.6-jemalloc:local .`
+2. Build a derived image using non-interactive user-creation command(s).
+3. Confirm derived image build completes without prompt/hang behavior.
+4. Confirm created user exists with `id <username>` in the derived image.
+
+### Recorded Validation Run (Current)
+
+- Validation runs executed: 1
+- Successful runs: 1
+- Success rate for this run set: 100%
+
+SC-004 status for current maintainer run set: ✅ PASS

@@ -150,49 +150,49 @@ GHCR, and `latest` is conditionally set.
 
 ### Implementation
 
-- [ ] T025 Fix `on:` trigger in `.github/workflows/build.yml`: remove
+- [x] T025 Fix `on:` trigger in `.github/workflows/build.yml`: remove
   `push: branches: [main]`; add `push: tags: ['v*']`; retain
   `pull_request: branches: [main]` and `workflow_dispatch`
-- [ ] T026 [P] Update `release` job condition in `.github/workflows/build.yml`
+- [x] T026 [P] Update `release` job condition in `.github/workflows/build.yml`
   from `if: github.event_name != 'pull_request'` to
   `if: startsWith(github.ref, 'refs/tags/')`
-- [ ] T027 [P] Update `verify-release` job condition in
+- [x] T027 [P] Update `verify-release` job condition in
   `.github/workflows/build.yml` to match: `if: startsWith(github.ref, 'refs/tags/')`
-- [ ] T028 Update login step in `release` job in `.github/workflows/build.yml`:
+- [x] T028 Update login step in `release` job in `.github/workflows/build.yml`:
   change `username` to `${{ secrets.REGISTRY_USERNAME }}` and `password` to
   `${{ secrets.REGISTRY_PASSWORD }}`
-- [ ] T029 Add "Extract Ruby version" step in `release` job in
+- [x] T029 Add "Extract Ruby version" step in `release` job in
   `.github/workflows/build.yml` (before metadata step): grep
   `ARG RUBY_VERSION=` from `Dockerfile` and write `RUBY_VERSION` to
   `$GITHUB_ENV`
-- [ ] T030 Add "Determine latest tag eligibility" step in `release` job in
+- [x] T030 Add "Determine latest tag eligibility" step in `release` job in
   `.github/workflows/build.yml` (after T029): authenticate to GHCR with
   `REGISTRY_USERNAME`/`REGISTRY_PASSWORD`, query GHCR tags API for `2.6.*`
   tags, semver-compare against `RUBY_VERSION`, and write `PUSH_LATEST=true`
   or `PUSH_LATEST=false` to `$GITHUB_ENV`; on API failure or no existing
   tags, default to `PUSH_LATEST=true` without failing the build
-- [ ] T031 Update `docker/metadata-action` tags block in `release` job in
+- [x] T031 Update `docker/metadata-action` tags block in `release` job in
   `.github/workflows/build.yml`: replace current tags with
   `type=raw,value=${{ env.RUBY_VERSION }}`,
   `type=raw,value=latest,enable=${{ env.PUSH_LATEST }}`, and
   `type=sha,prefix=sha-`; remove `type=ref,event=branch` and
   `type=ref,event=pr` (no longer needed for tag-only builds)
-- [ ] T032 [P] Create `CHANGELOG.md` at repository root using Keep-a-Changelog
+- [x] T032 [P] Create `CHANGELOG.md` at repository root using Keep-a-Changelog
   format; include `[Unreleased]` section and back-fill entries for:
   v1.0.0 (heredoc Dockerfile formatting), v1.1.0 (multi-arch build + GHA
   cache), v1.2.0 (debian-slim runtime + adduser support)
-- [ ] T033 [P] Add `hadolint` to `.pre-commit-config.yaml` and verify
+- [x] T033 [P] Add `hadolint` to `.pre-commit-config.yaml` and verify
   `Dockerfile` passes `hadolint` on `make lint`; pin `hadolint` hook to a
   specific rev in the pre-commit config
-- [ ] T034 [P] Add missing OCI labels to the final stage of `Dockerfile`:
+- [x] T034 [P] Add missing OCI labels to the final stage of `Dockerfile`:
   `org.opencontainers.image.title` (project name) and
   `org.opencontainers.image.version` (using `ARG RUBY_VERSION`)
-- [ ] T035 Add explicit non-interactive user-management verification for
+- [x] T035 Add explicit non-interactive user-management verification for
   FR-002 by adding a derived-image build example and recorded result in
   `specs/003-support-adduser-utils/verification/us1-runtime-baseline.md`
   using non-interactive flags (for example, `adduser --system` with
   non-interactive options)
-- [ ] T036 Define and run SC-004 validation protocol by documenting a
+- [x] T036 Define and run SC-004 validation protocol by documenting a
   maintainer-run procedure in
   `specs/003-support-adduser-utils/verification/us1-runtime-baseline.md`
   and recording at least one successful walkthrough result

@@ -97,10 +97,12 @@ EOF
 # ============================================================
 FROM debian:bookworm-slim
 
-LABEL org.opencontainers.image.description="Ruby 2.6 image with jemalloc 5.3.1" \
-      org.opencontainers.image.source="https://github.com/UMNLibraries/ruby2.6-jemalloc-docker"
-
 ARG RUBY_VERSION=2.6.10
+
+LABEL org.opencontainers.image.title="ruby2.6-jemalloc-docker" \
+    org.opencontainers.image.description="Ruby 2.6 image with jemalloc 5.3.1" \
+    org.opencontainers.image.version="${RUBY_VERSION}" \
+    org.opencontainers.image.source="https://github.com/UMNLibraries/ruby2.6-jemalloc-docker"
 
 ENV RUBY_VERSION=${RUBY_VERSION}
 

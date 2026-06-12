@@ -1,3 +1,9 @@
+<!-- copilot instructions start -->
+Use professional, neutral language.
+No jokes, sarcasm, playful metaphors, or “cute” commentary.
+Keep responses direct and task-focused.
+<!-- copilot instructions end -->
+
 <!-- SPECKIT START -->
 When writing markdown files, use the following guidelines:
 - wrap lines at 80 characters
@@ -10,6 +16,8 @@ and treat it as the authoritative implementation context.
 <!-- project-specific instructions start -->
 
 # Instructions
+
+For governance principles, constraints, and PR requirements, see `.specify/memory/constitution.md`.
 
 The purpose of this project is to build a Docker container image providing the latest patch release
 within the Ruby 2.6.x series (intentionally pinned to 2.6, not a newer major version). The 2.6.x pin
@@ -27,6 +35,7 @@ package manager must be present in the final image.
 
 The build stage must use `debian:bookworm-slim` as the builder image.
 It will use a multi-stage build to remove unnecessary image contents.
+
 The `Dockerfile` will be formatted with "here-doc" `RUN` blocks for clarity and maintainability.
 The `Dockerfile` must be linted with `hadolint` and follow best practices for layer management and caching.
 The `Dockerfile` must include a LABEL with the project name, description, and version.
@@ -72,8 +81,10 @@ via pull requests when new patch releases are available.
 
 * The project will be hosted on GitHub, with a clear branching strategy for
   development and releases.
-* Use semantic versioning (`MAJOR.MINOR.PATCH`, e.g., `1.0.0`) for the Dockerfile project's own
-  release tags. These project release tags are distinct from the version tags of the image dependencies, including Ruby, Debian, and jemalloc.
+* Use semantic versioning (`MAJOR.MINOR.PATCH`, e.g., `1.0.0`) for the
+  Dockerfile project's own release tags. These project release tags are
+  distinct from the version tags of the image dependencies, including Ruby,
+  Debian, and jemalloc.
 * Maintain a `CHANGELOG.md` file updated with each project release.
 * Pull requests will be used for all changes, with code review and automated
   testing before merging.
