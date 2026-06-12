@@ -10,7 +10,7 @@ This repository provides a multistage Docker build that compiles:
 - **jemalloc 5.3.0** – linked into Ruby at compile time via `--with-jemalloc` for improved memory performance.
 - **Ruby 2.6.10** – the latest 2.6.x release, compiled from source against the above libraries.
 
-The multistage build keeps the final image lean by carrying over only the compiled binaries and required runtime libraries into a `scratch`-based final image.
+The multistage build carries compiled binaries and required runtime libraries into a `debian:bookworm-slim` final image, providing a practical balance between image size and runtime extensibility.
 
 ## Build Command Style
 
@@ -90,6 +90,48 @@ The verification script checks:
 
 - Ruby reports `2.6.x`
 - jemalloc is mapped into the running Ruby process (`/proc/self/maps`)
+
+## Extending the Image: User Management
+
+The `debian:bookworm-slim` final stage includes user-management utilities, enabling downstream images to create application users and groups. This is useful for running Ruby applications with reduced privileges.
+
+### Example: Creating a Non-Root User
+
+```dockerfile
+FROM ghcr.io/umnlibraries/ruby2.6-jemalloc-docker:latest
+
+# Create a non-root user for the application
+RUN adduser --system --disabled-password --disabled-login \
+    --gecos "Ruby App" rubyapp
+
+# Copy application code
+COPY app/ /app/
+
+# Set ownership and permissions
+RUN chown -R rubyapp:rubyapp /app && chmod 750 /app
+
+USER rubyapp
+WORKDIR /app
+
+ENTRYPOINT ["ruby", "app.rb"]
+```
+
+### Example: Managing Groups
+
+```dockerfile
+FROM ghcr.io/umnlibraries/ruby2.6-jemalloc-docker:latest
+
+# Create a group and user
+RUN groupadd webservices && \
+    adduser --system --disabled-password --ingroup webservices www-user
+
+COPY app/ /app/
+RUN chown -R www-user:webservices /app
+
+USER www-user
+```
+
+The base image does not include verification of specific user-management commands in derived layers; downstream maintainers are responsible for validating user creation and permission workflows in their own Dockerfiles.
 
 ## CI/CD
 

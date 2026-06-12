@@ -92,57 +92,57 @@ make install
 rm -rf /tmp/build/ruby-*
 EOF
 
-# Assemble a minimal runtime filesystem for the final scratch image.
-RUN <<'EOF'
-set -eux
-
-mkdir -p /runtime-root
-
-# Copy Ruby, OpenSSL, and CA certificates required at runtime.
-mkdir -p /runtime-root/usr /runtime-root/opt /runtime-root/etc/ssl
-cp -a /usr/local /runtime-root/usr/local
-cp -a /opt/openssl /runtime-root/opt/openssl
-cp -a /etc/ssl/certs /runtime-root/etc/ssl/certs
-
-# Copy dynamic libraries required by Ruby + linked shared libraries.
-tmp_lib_list="$(mktemp)"
-ldd /usr/local/bin/ruby | awk '{if ($1 ~ /^\//) print $1; else if ($3 ~ /^\//) print $3}' >> "$tmp_lib_list"
-ldd /usr/local/lib/libruby.so.2.6 | awk '{if ($1 ~ /^\//) print $1; else if ($3 ~ /^\//) print $3}' >> "$tmp_lib_list"
-ldd /usr/local/lib/libjemalloc.so.2 | awk '{if ($1 ~ /^\//) print $1; else if ($3 ~ /^\//) print $3}' >> "$tmp_lib_list"
-ldd /opt/openssl/lib/libssl.so.1.1 | awk '{if ($1 ~ /^\//) print $1; else if ($3 ~ /^\//) print $3}' >> "$tmp_lib_list"
-ldd /opt/openssl/lib/libcrypto.so.1.1 | awk '{if ($1 ~ /^\//) print $1; else if ($3 ~ /^\//) print $3}' >> "$tmp_lib_list"
-
-sort -u "$tmp_lib_list" | while read -r lib; do
-    [ -n "$lib" ]
-    [ -e "$lib" ]
-    resolved="$(readlink -f "$lib")"
-
-    mkdir -p "/runtime-root$(dirname "$resolved")"
-    cp -a "$resolved" "/runtime-root$resolved"
-
-    if [ "$lib" != "$resolved" ]; then
-        mkdir -p "/runtime-root$(dirname "$lib")"
-        ln -sf "$resolved" "/runtime-root$lib"
-    fi
-done
-
-rm -f "$tmp_lib_list"
-EOF
-
 # ============================================================
-# Stage 2: Final – minimal runtime image
+# Stage 2: Final – small runtime image with debian base
 # ============================================================
-FROM busybox:1-musl
-
-LABEL org.opencontainers.image.description="Ruby 2.6 image with jemalloc 5.3.1" \
-      org.opencontainers.image.source="https://github.com/UMNLibraries/ruby2.6-jemalloc-docker"
+FROM debian:bookworm-slim
 
 ARG RUBY_VERSION=2.6.10
 
-ENV LD_LIBRARY_PATH=/opt/openssl/lib:/usr/local/lib \
-    RUBY_VERSION=${RUBY_VERSION}
+LABEL org.opencontainers.image.title="ruby2.6-jemalloc-docker" \
+    org.opencontainers.image.description="Ruby 2.6 image with jemalloc 5.3.1" \
+    org.opencontainers.image.version="${RUBY_VERSION}" \
+    org.opencontainers.image.source="https://github.com/UMNLibraries/ruby2.6-jemalloc-docker"
 
-# Copy curated runtime filesystem from builder.
-COPY --from=builder /runtime-root/ /
+ENV RUBY_VERSION=${RUBY_VERSION}
+
+# Copy compiled Ruby, OpenSSL, and CA certificates from builder.
+COPY --from=builder /usr/local /usr/local
+COPY --from=builder /opt/openssl /opt/openssl
+COPY --from=builder /etc/ssl/certs /etc/ssl/certs
+
+# Install runtime library dependencies and register compiled library paths.
+# Remove unnecessary build artifacts (headers, static libs, pkgconfig) to minimize image size.
+RUN <<'EOF'
+set -eux
+
+# Step: install runtime dependencies required by Ruby, OpenSSL, jemalloc
+apt-get update
+apt-get install -y --no-install-recommends \
+    libffi8 \
+    libgdbm6 \
+    libncurses6 \
+    libreadline8 \
+    libyaml-0-2 \
+    zlib1g \
+    ca-certificates
+
+# Step: remove build artifacts from copied Ruby and OpenSSL
+rm -rf /usr/local/include \
+       /usr/local/lib/pkgconfig \
+       /usr/local/lib/*.a \
+       /usr/local/share/doc \
+       /usr/local/share/man \
+       /opt/openssl/include \
+       /opt/openssl/lib/pkgconfig \
+       /opt/openssl/lib/*.a
+
+# Step: register compiled library paths for Ruby and OpenSSL at runtime
+ldconfig /opt/openssl/lib /usr/local/lib
+
+# Step: clean apt caches and temporary files
+rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
+
+EOF
 
 CMD ["irb"]

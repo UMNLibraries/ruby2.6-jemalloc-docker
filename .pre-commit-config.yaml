@@ -25,3 +25,18 @@ repos:
     hooks:
       - id: yamllint
         args: [--strict, -c=.yamllint.yml]
+
+  # Dockerfile linter (pinned image, no host binary dependency)
+  - repo: local
+    hooks:
+      - id: hadolint
+        name: hadolint
+        language: system
+        files: (^|/)Dockerfile$
+        entry: >-
+          bash -c '
+            for file in "$@"; do
+              docker run --rm -i hadolint/hadolint:v2.12.0 \
+                hadolint --ignore DL3003 --ignore DL3008 - < "$file"
+            done
+          ' --

@@ -13,6 +13,15 @@
         "true": true,
         "git worktree": true,
         "pre-commit": true,
-        "docker build": true
+        "docker build": true,
+        ".specify/extensions/git/scripts/bash/create-new-feature.sh": true,
+        "adduser": true,
+        "cp": true,
+        "get_terminal_output": true,
+        "/^bash \\.specify/scripts/bash/setup-tasks\\.sh --json 2>/dev/null$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        ".specify/extensions/git/scripts/bash/auto-commit.sh": true
     }
 }

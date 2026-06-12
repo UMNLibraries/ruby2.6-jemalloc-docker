@@ -3,12 +3,10 @@ name: Build and publish Docker image
 
 "on":
   push:
-    branches: [main]
+    tags: [v*]
   pull_request:
     branches: [main]
   workflow_dispatch:
-  release:
-    types: [published]
 
 env:
   REGISTRY: ghcr.io
@@ -17,7 +15,7 @@ env:
 
 jobs:
   release:
-    if: github.event_name != 'pull_request'
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -39,22 +37,72 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Normalize image name
-        run: echo "IMAGE_NAME_LOWER=${IMAGE_NAME,,}" >> "$GITHUB_ENV"
+        id: normalize
+        run: echo "image_name_lower=${IMAGE_NAME,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract Ruby version from Dockerfile
+        run: |
+          ruby_version="$(grep -m1 '^ARG RUBY_VERSION=' Dockerfile | cut -d= -f2)"
+          echo "RUBY_VERSION=${ruby_version}" >> "$GITHUB_ENV"
+
+      - name: Determine latest tag eligibility
+        run: |
+          set -eu
+
+          image_path="${{ steps.normalize.outputs.image_name_lower }}"
+          tags_api="https://ghcr.io/v2/${image_path}/tags/list"
+          auth_user="${{ secrets.REGISTRY_USERNAME }}"
+          auth_pass="${{ secrets.REGISTRY_PASSWORD }}"
+
+          push_latest=true
+          response="$({
+            curl -fsSL -u "${auth_user}:${auth_pass}" "${tags_api}" 2>/dev/null
+          } || true)"
+
+          if [ -n "${response}" ]; then
+            tags="$(
+              printf '%s' "${response}" \
+                | python3 -c 'import json,sys; p=sys.stdin.read(); d=json.loads(p);'\
+                  'print("\\n".join(d.get("tags", [])))' \
+                2>/dev/null || true
+            )"
+
+            current_tags="$({
+              printf '%s\n' "${tags}" | grep -E '^2\.6\.[0-9]+$'
+            } || true)"
+
+            if [ -n "${current_tags}" ]; then
+              highest_existing="$(printf '%s\n' "${current_tags}" | sort -V | tail -1)"
+              winner="$({
+                printf '%s\n%s\n' "${highest_existing}" "${RUBY_VERSION}" \
+                  | sort -V \
+                  | tail -1
+              })"
+
+              if [ "${winner}" = "${RUBY_VERSION}" ] \
+                && [ "${RUBY_VERSION}" != "${highest_existing}" ]; then
+                push_latest=true
+              else
+                push_latest=false
+              fi
+            fi
+          fi
+
+          echo "PUSH_LATEST=${push_latest}" >> "$GITHUB_ENV"
 
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}
+          images: ${{ env.REGISTRY }}/${{ steps.normalize.outputs.image_name_lower }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ env.RUBY_VERSION }}
+            type=raw,value=latest,enable=${{ env.PUSH_LATEST }}
             type=sha,prefix=sha-
-            type=ref,event=branch
-            type=ref,event=pr
 
       - name: Build and push Docker image
         id: build
@@ -73,7 +121,7 @@ jobs:
             JEMALLOC_VERSION=5.3.0
 
   verify-release:
-    if: github.event_name != 'pull_request'
+    if: startsWith(github.ref, 'refs/tags/')
     needs: release
     runs-on: ubuntu-latest
     strategy:
@@ -106,19 +154,23 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Normalize image name
-        run: echo "IMAGE_NAME_LOWER=${IMAGE_NAME,,}" >> "$GITHUB_ENV"
+        id: normalize
+        run: echo "image_name_lower=${IMAGE_NAME,,}" >> "$GITHUB_OUTPUT"
 
       - name: Resolve release image reference
         run: |
           release_digest="${{ needs.release.outputs.release_digest }}"
-          echo "RELEASE_IMAGE=${REGISTRY}/${IMAGE_NAME_LOWER}@${release_digest}" >> "$GITHUB_ENV"
+          image_ref="${REGISTRY}/${{ steps.normalize.outputs.image_name_lower }}"
+          echo "RELEASE_IMAGE=${image_ref}@${release_digest}" >> "$GITHUB_ENV"
 
       - name: Pull release image
         run: docker pull "$RELEASE_IMAGE"
 
       - name: Verify Ruby and jemalloc runtime
         run: |
-          ./scripts/verify-ruby-jemalloc.sh "$RELEASE_IMAGE" "${{ matrix.platform }}"
+          ./scripts/verify-ruby-jemalloc.sh \
+            "$RELEASE_IMAGE" \
+            "${{ matrix.platform }}"
 
   verify-pr:
     if: github.event_name == 'pull_request'
