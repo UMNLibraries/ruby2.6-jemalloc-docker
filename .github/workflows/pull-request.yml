@@ -1,0 +1,57 @@
+---
+name: Pull request validation
+
+"on":
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  MULTIARCH_SCOPE: multiarch-image-cache
+
+jobs:
+  verify-pr:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            platform: linux/amd64
+          - arch: arm64
+            platform: linux/arm64
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Build verification image (load)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          load: true
+          push: false
+          tags: ruby2.6-jemalloc:ci-${{ matrix.arch }}
+          cache-from: type=gha,scope=${{ env.MULTIARCH_SCOPE }}
+          cache-to:
+            type=gha,mode=max,scope=${{ env.MULTIARCH_SCOPE }}-pr-${{
+            matrix.arch }}
+          build-args: |
+            RUBY_VERSION=2.6.10
+            OPENSSL_VERSION=1.1.1w
+            JEMALLOC_VERSION=5.3.0
+
+      - name: Verify Ruby and jemalloc runtime
+        run: |
+          ./scripts/verify-ruby-jemalloc.sh \
+            "ruby2.6-jemalloc:ci-${{ matrix.arch }}" \
+            "${{ matrix.platform }}"
