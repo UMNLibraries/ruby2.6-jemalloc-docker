@@ -3,7 +3,7 @@
 # ============================================================
 # Stage 1: compile OpenSSL 1.1.1, jemalloc, Ruby
 # ============================================================
-FROM debian:bookworm-slim AS builder
+FROM ubuntu:26.04 AS builder
 
 ARG OPENSSL_VERSION=1.1.1w
 ARG JEMALLOC_VERSION=5.3.1
@@ -69,7 +69,7 @@ EOF
 
 # Build Ruby 2.6.x with jemalloc and OpenSSL 1.1.1
 ENV LD_LIBRARY_PATH=/opt/openssl/lib:/usr/local/lib
-RUN <<EOF
+RUN <<__build__
 set -eux
 # Step: download Ruby source
 wget -q "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-${RUBY_VERSION}.tar.gz"
@@ -79,6 +79,7 @@ cd "ruby-${RUBY_VERSION}"
 # Step: configure and build Ruby
 ./configure \
     --prefix=/usr/local \
+    --includedir=/usr/local/include \
     --with-openssl-dir=/opt/openssl \
     --with-jemalloc \
     --enable-shared \
@@ -90,16 +91,16 @@ make install
 
 # Step: clean Ruby build artifacts
 rm -rf /tmp/build/ruby-*
-EOF
+__build__
 
 # ============================================================
-# Stage 2: Final – small runtime image with debian base
+# Stage 2: Final – basic runtime image with headers for compiled Ruby, OpenSSL, and jemalloc
 # ============================================================
-FROM debian:bookworm-slim
+FROM ubuntu:26.04
 
 ARG RUBY_VERSION=2.6.10
 
-LABEL org.opencontainers.image.title="ruby2.6-jemalloc-docker" \
+LABEL org.opencontainers.image.title="ruby2.6-jemalloc" \
     org.opencontainers.image.description="Ruby 2.6 image with jemalloc 5.3.1" \
     org.opencontainers.image.version="${RUBY_VERSION}" \
     org.opencontainers.image.source="https://github.com/UMNLibraries/ruby2.6-jemalloc-docker"
@@ -126,16 +127,6 @@ apt-get install -y --no-install-recommends \
     libyaml-0-2 \
     zlib1g \
     ca-certificates
-
-# Step: remove build artifacts from copied Ruby and OpenSSL
-rm -rf /usr/local/include \
-       /usr/local/lib/pkgconfig \
-       /usr/local/lib/*.a \
-       /usr/local/share/doc \
-       /usr/local/share/man \
-       /opt/openssl/include \
-       /opt/openssl/lib/pkgconfig \
-       /opt/openssl/lib/*.a
 
 # Step: register compiled library paths for Ruby and OpenSSL at runtime
 ldconfig /opt/openssl/lib /usr/local/lib
