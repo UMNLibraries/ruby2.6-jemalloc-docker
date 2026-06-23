@@ -38,10 +38,15 @@ lint:
 	pre-commit run --all-file
 
 build:
-	docker build --no-cache --progress=plain --platform "$(MULTIARCH_PLATFORMS)" --tag $(REGISTRY):latest .
+	docker build --progress=plain --platform "$(MULTIARCH_PLATFORMS)" --tag $(REGISTRY):latest .
+
+.PHONY: tags
+tags:
+	docker tag $(REGISTRY):latest $(REGISTRY):0.0.5
 
 push:
 	docker push $(REGISTRY):latest
+	docker push $(REGISTRY):0.0.5
 
 build-amd64:
 	docker buildx build --platform linux/amd64 --load -t ruby2.6-jemalloc:amd64 .
@@ -55,19 +60,8 @@ push-arm64:
 pull-arm64:
 	docker pull --platform linux/arm64 $(REGISTRY):latest
 
-build-release:
-	docker buildx build \
-	  --platform $(MULTIARCH_PLATFORMS) \
-	  --cache-from type=local,src=$(MULTIARCH_CACHE_DIR) \
-	  --cache-to type=local,dest=$(MULTIARCH_CACHE_DIR)-new,mode=max \
-	  --push \
-	  -t $(REGISTRY):$(MULTIARCH_TAG) \
-	  .
-	@rm -rf $(MULTIARCH_CACHE_DIR)
-	@mv $(MULTIARCH_CACHE_DIR)-new $(MULTIARCH_CACHE_DIR)
-
 verify: build
-	./scripts/verify-ruby-jemalloc.sh ruby2.6-jemalloc:local
+	./scripts/verify-ruby-jemalloc.sh ruby2.6-jemalloc:latest
 
 verify-amd64: build-amd64
 	./scripts/verify-ruby-jemalloc.sh ruby2.6-jemalloc:amd64 linux/amd64
