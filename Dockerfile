@@ -3,7 +3,7 @@
 # ============================================================
 # Stage 1: compile OpenSSL 1.1.1, jemalloc, Ruby
 # ============================================================
-FROM debian:bookworm-slim AS builder
+FROM debian:stable-20260610-slim@sha256:34363c20bd149e41365fc77b086da067ed13ab2dff4cd0612788e12e6d52c44c AS build
 
 ARG OPENSSL_VERSION=1.1.1w
 ARG JEMALLOC_VERSION=5.3.1
@@ -107,12 +107,13 @@ LABEL org.opencontainers.image.title="ruby2.6-jemalloc-docker" \
 ENV RUBY_VERSION=${RUBY_VERSION}
 
 # Copy compiled Ruby, OpenSSL, and CA certificates from builder.
-COPY --from=builder /usr/local /usr/local
-COPY --from=builder /opt/openssl /opt/openssl
-COPY --from=builder /etc/ssl/certs /etc/ssl/certs
+COPY --from=build /usr/local /usr/local
+COPY --from=build /opt/openssl /opt/openssl
+COPY --from=build /etc/ssl/certs /etc/ssl/certs
 
 # Install runtime library dependencies and register compiled library paths.
-# Remove unnecessary build artifacts (headers, static libs, pkgconfig) to minimize image size.
+# Remove unnecessary build artifacts (headers, static libs, pkgconfig) to
+# minimize image size.
 RUN <<'EOF'
 set -eux
 
