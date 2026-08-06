@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM debian:stable-20260623-slim@sha256:ee12ffb55625b99d62837a72f037d9b2f18fd0c787a89c2b9a4f09666c48776c
+FROM debian:stable-20260803-slim@sha256:7baea22a22716c63104a0048217f9b56d7b78dcf18ec90943e890ed7e1bc8e09
 
 ARG OPENSSL_VERSION=1.1.1w
 ARG JEMALLOC_VERSION=5.3.1
