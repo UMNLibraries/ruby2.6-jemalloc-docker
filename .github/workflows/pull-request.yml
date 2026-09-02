@@ -1,5 +1,6 @@
 ---
-name: Pull request validation
+# Validate PR before merging to main
+name: validate-pr
 
 "on":
   pull_request:
