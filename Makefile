@@ -4,8 +4,10 @@ usage:
 	@echo ""
 	@echo "Targets:"
 	@echo "  usage          Show this help message"
+	@echo "  clean          Remove local build cache and images"
 	@echo "  lint           Run pre-commit linters on all files"
 	@echo "  build          Build multi-arch image locally (no push)"
+	@echo "  tags           Tag the most recently built local image"
 	@echo "  build-amd64    Build image for linux/amd64, load into local Docker"
 	@echo "  build-arm64    Build image for linux/arm64, load into local Docker"
 	@echo "  build-release  Build multi-arch image and push to registry"
@@ -16,7 +18,6 @@ usage:
 	@echo "  push           Push latest tag to registry"
 	@echo "  push-arm64     Push arm64 image to registry"
 	@echo "  pull-arm64     Pull arm64 image from registry"
-	@echo "  clean          Remove local build cache and images"
 	@echo ""
 	@echo "Variables (override with make VAR=value):"
 	@echo "  REGISTRY              $(REGISTRY)"
@@ -30,6 +31,8 @@ MULTIARCH_TAG ?= sha-$(shell git rev-parse --short HEAD 2>/dev/null || echo loca
 MULTIARCH_PLATFORMS ?= linux/amd64,linux/arm64
 MULTIARCH_CACHE_DIR ?= .buildx-cache
 
+.PHONY: clean lint build tags push
+
 clean:
 	-rm -rf .buildx-cache .buildx-cache-new
 	-docker rmi --force ruby2.6-jemalloc:local
@@ -40,7 +43,6 @@ lint:
 build:
 	docker build --progress=plain --platform "$(MULTIARCH_PLATFORMS)" --tag $(REGISTRY):latest .
 
-.PHONY: tags
 tags:
 	docker tag $(REGISTRY):latest $(REGISTRY):0.0.5
 
@@ -54,12 +56,6 @@ build-amd64:
 build-arm64:
 	docker buildx build --platform linux/arm64 --load -t ruby2.6-jemalloc:arm64 .
 
-push-arm64:
-	docker push --platform linux/arm64 $(REGISTRY):latest
-
-pull-arm64:
-	docker pull --platform linux/arm64 $(REGISTRY):latest
-
 verify: build
 	./scripts/verify-ruby-jemalloc.sh ruby2.6-jemalloc:latest
 
@@ -68,7 +64,3 @@ verify-amd64: build-amd64
 
 verify-arm64: build-arm64
 	./scripts/verify-ruby-jemalloc.sh ruby2.6-jemalloc:arm64 linux/arm64
-
-verify-release: build-release
-	./scripts/verify-ruby-jemalloc.sh $(REGISTRY):$(MULTIARCH_TAG) linux/amd64
-	./scripts/verify-ruby-jemalloc.sh $(REGISTRY):$(MULTIARCH_TAG) linux/arm64
