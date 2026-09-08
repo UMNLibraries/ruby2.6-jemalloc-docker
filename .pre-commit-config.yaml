@@ -40,3 +40,8 @@ repos:
                 hadolint --ignore DL3003 --ignore DL3008 - < "$file"
             done
           ' --
+
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+      - id: gitlint
