@@ -40,6 +40,9 @@ clean:
 lint:
 	pre-commit run --all-file
 
+init:
+	pre-commit install
+
 build:
 	docker build --progress=plain --platform "$(MULTIARCH_PLATFORMS)" --tag $(REGISTRY):latest .
 
