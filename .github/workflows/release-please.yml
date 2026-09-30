@@ -1,4 +1,7 @@
+# see e.g. https://github.com/googleapis/release-please-action
 ---
+name: release-please
+
 on: # yamllint disable-line rule:truthy
   push:
     branches:
@@ -9,13 +12,12 @@ permissions:
   issues: write
   pull-requests: write
 
-name: release-please
-
 jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: googleapis/release-please-action@v4
+      - name: release-please
+        uses: googleapis/release-please-action@v5
         with:
-          token: ${{ secrets.RELEASE_PLEASE_PAT }}
           release-type: simple
+          token: ${{ secrets.RELEASE_PLEASE_PAT }}

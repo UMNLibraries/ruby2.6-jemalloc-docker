@@ -48,11 +48,11 @@ build:
 	docker build --progress=plain --platform "$(MULTIARCH_PLATFORMS)" --tag $(REGISTRY):latest .
 
 tags:
-	docker tag $(REGISTRY):latest $(REGISTRY):0.0.6
+	docker tag $(REGISTRY):latest $(REGISTRY):0.0.5
 
 push:
 	docker push $(REGISTRY):latest
-	docker push $(REGISTRY):0.0.6
+	docker push $(REGISTRY):0.0.5
 
 build-amd64:
 	docker buildx build --platform linux/amd64 --load -t ruby2.6-jemalloc:amd64 .
@@ -61,7 +61,7 @@ build-arm64:
 	docker buildx build --platform linux/arm64 --load -t ruby2.6-jemalloc:arm64 .
 
 verify: build
-	./scripts/verify-ruby-jemalloc.sh ruby2.6-jemalloc:latest
+	./scripts/verify-ruby-jemalloc.sh $(REGISTRY):latest
 
 verify-amd64: build-amd64
 	./scripts/verify-ruby-jemalloc.sh ruby2.6-jemalloc:amd64 linux/amd64
