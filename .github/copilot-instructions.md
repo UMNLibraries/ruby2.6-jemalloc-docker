@@ -41,7 +41,7 @@ Container Registry (GHCR) as a base image for a Rails application.
 - Reuse existing repository conventions and secrets where possible.
 - For deployment/publish automation:
   - assume images should be published to
-    `ghcr.io/umnlibraries/ruby2.6-jemalloc-docker`
+    `ghcr.io/umnlibraries/ruby2.6-jemalloc`
   - prefer tag-driven releases when implementing deploy workflows
   - avoid changing unrelated workflows unless required
 - Keep workflow permissions minimal.
