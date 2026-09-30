@@ -38,15 +38,11 @@ between runs. `make verify-release` pulls the published tag and verifies both ar
 
 ### Pull from GitHub Container Registry
 
-```sh
-docker pull ghcr.io/umnlibraries/ruby2.6-jemalloc-docker:latest
-```
+    docker pull ghcr.io/umnlibraries/ruby2.6-jemalloc:latest
 
 ### Build locally
 
-```sh
-docker build -t ruby2.6-jemalloc .
-```
+    docker build -t ruby2.6-jemalloc .
 
 Override versions at build time with `--build-arg`:
 
@@ -60,31 +56,23 @@ docker build \
 
 ### Run
 
-```sh
-docker run --rm -it ghcr.io/umnlibraries/ruby2.6-jemalloc-docker:latest ruby -v
-```
+    docker run --rm -it ghcr.io/umnlibraries/ruby2.6-jemalloc:latest ruby -v
 
 ### Runtime Verification
 
 Use the provided verification script after a local build:
 
-```sh
-make verify
-```
+    make verify
 
 Verify specific architectures (requires platform emulation support where needed):
 
-```sh
-make verify-amd64
-make verify-arm64
-```
+    make verify-amd64
+    make verify-arm64
 
 For the multi-platform release flow, use:
 
-```sh
-make build-release
-make verify-release
-```
+    make build-release
+    make verify-release
 
 The verification script checks:
 
@@ -93,7 +81,10 @@ The verification script checks:
 
 ## Extending the Image: User Management
 
-The `debian:bookworm-slim` final stage includes user-management utilities, enabling downstream images to create application users and groups. This is useful for running Ruby applications with reduced privileges.
+The `debian:bookworm-slim` final stage includes user-management
+utilities, enabling downstream images to create application users
+and groups. This is useful for running Ruby applications with
+reduced privileges.
 
 ### Example: Creating a Non-Root User
 
@@ -131,14 +122,19 @@ RUN chown -R www-user:webservices /app
 USER www-user
 ```
 
-The base image does not include verification of specific user-management commands in derived layers; downstream maintainers are responsible for validating user creation and permission workflows in their own Dockerfiles.
+The base image does not include verification of specific
+user-management commands in derived layers; downstream
+maintainers are responsible for validating user creation and
+permission workflows in their own Dockerfiles.
 
 ## CI/CD
 
-GitHub Actions publishes one multi-platform image tag on pushes to `main` and manual release
-runs. Pull requests run per-platform verification builds with cache reuse enabled so changes are
+GitHub Actions publishes one multi-platform image tag on pushes
+to `main` and manual release runs. Pull requests run per-platform
+verification builds with cache reuse enabled so changes are
 validated without publishing.
 
-The release job publishes a single manifest-backed tag for `linux/amd64` and `linux/arm64`, while
-the verification job checks the published tag on `main` and uses cached per-platform build/load
-runs on pull requests.
+The release job publishes a single manifest-backed tag for
+`linux/amd64` and `linux/arm64`, while the verification job
+checks the published tag on `main` and uses cached per-platform
+build/load runs on pull requests.
