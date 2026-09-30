@@ -106,4 +106,15 @@ rm -rf /tmp/build/ruby-*
 ldconfig /opt/openssl/lib /usr/local/lib
 __ruby__
 
+# create a non-root default user
+RUN <<__user__
+groupadd --system app
+useradd --system --gid app --create-home --home-dir /home/app --shell /usr/sbin/nologin app
+__user__
+
+USER app
+WORKDIR /home/app
+
+HEALTHCHECK NONE
+
 CMD ["irb"]
