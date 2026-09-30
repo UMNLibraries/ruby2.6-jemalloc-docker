@@ -106,4 +106,6 @@ rm -rf /tmp/build/ruby-*
 ldconfig /opt/openssl/lib /usr/local/lib
 __ruby__
 
+HEALTHCHECK NONE
+
 CMD ["irb"]
