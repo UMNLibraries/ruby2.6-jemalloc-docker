@@ -39,6 +39,7 @@ clean:
 
 lint:
 	pre-commit run --all-file
+	checkov --quiet --directory . --framework dockerfile
 
 init:
 	pre-commit install
