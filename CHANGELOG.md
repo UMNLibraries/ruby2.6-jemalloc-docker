@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on Keep a Changelog, and this project follows Semantic
 Versioning for project releases.
 
+## [0.6.0](https://github.com/UMNLibraries/ruby2.6-jemalloc-docker/compare/v0.5.0...v0.6.0) (2026-10-01)
+
+
+### Miscellaneous Chores
+
+* release 0.6.0 ([ac28c99](https://github.com/UMNLibraries/ruby2.6-jemalloc-docker/commit/ac28c99152878527a512170e4c5e3172f321ac5d))
+
 ## [0.5.0](https://github.com/UMNLibraries/ruby2.6-jemalloc-docker/compare/0.4.0...0.5.0) (2026-10-01)
 
 
