@@ -19,6 +19,7 @@ jobs:
       - name: release-please
         uses: googleapis/release-please-action@v5
         with:
+          configuration: .github/release-please-config.json
           release-type: simple
           include-v-in-tag: false
           token: ${{ secrets.RELEASE_PLEASE_PAT }}
