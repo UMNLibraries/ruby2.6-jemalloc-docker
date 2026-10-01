@@ -21,5 +21,4 @@ jobs:
         with:
           release-type: simple
           config-file: .github/release-please-config.json
-          include-v-in-tag: false
           token: ${{ secrets.RELEASE_PLEASE_PAT }}
