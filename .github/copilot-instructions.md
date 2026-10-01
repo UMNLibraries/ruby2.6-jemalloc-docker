@@ -22,8 +22,9 @@ Container Registry (GHCR) as a base image for a Rails application.
 - Do not introduce unnecessary tooling, frameworks, or large refactors.
 - Keep changes easy to review and compatible with the existing GitHub Actions
   setup.
-- Git commit messages should follow "Conventional Commit" style, for example
-  `feat: add support for Ruby 2.6.10` or `fix: update jemalloc to 5.5.0`.
+- Git commit messages should follow "Conventional Commit" style, for example:
+  - `feat: add support for Ruby 2.6.10`
+  - `fix: update jemalloc to 5.5.0`
 
 ## Dockerfile guidance
 
@@ -49,6 +50,8 @@ Container Registry (GHCR) as a base image for a Rails application.
 - Keep workflow permissions minimal.
 
 ## Pull request expectations
+
+In discussions, be terse.
 
 When preparing changes:
 
