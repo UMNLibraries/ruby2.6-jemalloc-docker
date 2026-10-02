@@ -4,7 +4,8 @@
       "release-type": "simple",
       "bump-minor-pre-major": true,
       "include-v-in-tag": false,
-      "include-v-in-release-name": false
+      "include-v-in-release-name": false,
+      "release-name": "${version}"
     }
   }
 }
