@@ -14,3 +14,9 @@ This repository provides a Docker build based on
   for improved memory performance.
 - **Ruby 2.6.10** – the latest 2.6.x release, compiled from source against the
   above libraries.
+
+## Resources
+
+* <https://engineering.binti.com/jemalloc-with-ruby-and-docker/>
+* <https://www.carmenhchung.com/how-we-halved-memory-with-jemalloc>
+* <https://jamesdoesdigital.com/articles/jemalloc-reduce-rails-memory/>
