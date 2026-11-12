@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on Keep a Changelog, and this project follows Semantic
 Versioning for project releases.
 
+## [0.7.1](https://github.com/UMNLibraries/ruby2.6-jemalloc-docker/compare/v0.7.0...v0.7.1) (2026-11-12)
+
+
+### Bug Fixes
+
+* add jemalloc resources to README ([#61](https://github.com/UMNLibraries/ruby2.6-jemalloc-docker/issues/61)) ([957e8e2](https://github.com/UMNLibraries/ruby2.6-jemalloc-docker/commit/957e8e228aa1e5e6e6c88b57da73e433f09d2270))
+
 ## [0.7.0](https://github.com/UMNLibraries/ruby2.6-jemalloc-docker/compare/v0.6.0...v0.7.0) (2026-10-02)
 
 
